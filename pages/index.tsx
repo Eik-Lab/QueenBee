@@ -99,13 +99,22 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
 
   async function getSensorData() {
     // Api only allows one sensor fetched at a time (for Backend; accept multiple sensors in the future)
-    const pi_id = selectedId.value
+    const pi_id: string = selectedId.value
     // --
-    console.log(dateSelection[0].startDate)
-    console.log(dateSelection[0].endDate)
-    const res = await getData({pi_id: pi_id, start_date: dateSelection[0].startDate, stop_date: dateSelection[0].endDate})
-    console.log(res)
+    let query = { pi_id: pi_id, start_time: dateSelection[0].startDate, stop_time: dateSelection[0].endDate }
 
+    const res = await getData(query)
+
+    setData(res)
+
+  }
+
+  console.log("data: ", data)
+  console.log(data.map((item: any) => item.temp1))
+
+  function aggregateDataForPlot(data) {
+    let labels = []
+    let datasets = []
   }
 
   useEffect(() => {
@@ -121,7 +130,6 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
     // clean up
     return () => window.removeEventListener("click", handleClick);
   }, [showCalendar]);
-  console.log(dateSelection)
 
   return (
     <Layout title="BeeCTRL">
@@ -155,12 +163,10 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
             </div>
             <div className='w-full'>
               <button className={`${showCalendar ? "border-blue-500" : "border-gray-300"} border-2  w-full bg-white h-full rounded-lg hidden lg:block  text-left pl-3 text-gray-500`} onClick={() => setShowCalendar(!showCalendar)}>
-                {calendarClicked ? `${dateSelection[0].startDate.toLocaleDateString(locale, dateOptions)}  til  ${dateSelection[0].endDate.toLocaleDateString(locale, dateOptions)}`
+                {calendarClicked ? `fra ${dateSelection[0].startDate.toLocaleDateString(locale, dateOptions)}  til  ${dateSelection[0].endDate.toLocaleDateString(locale, dateOptions)}`
                   : "Select your daterange"}
               </button>
-
               {showCalendar &&
-
                 <div className='hidden lg:block absolute mt-1' ref={calendar}>
                   <DateRangePicker
                     className='border-2 border-gray-200 rounded-lg shadow-2xl'
@@ -168,14 +174,12 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
                     onChange={date => setDateSelection([date.selection] as any)}
                   />
                 </div>}
-
               <div className='lg:hidden bg-white mt-2 p-2 rounded-2xl shadow-2x border-2 border-gray-200'>
                 <DefinedRange
                   ranges={dateSelection}
                   onChange={date => setDateSelection([date.selection] as any)}
                 />
               </div>
-
             </div>
           </div>
         </div>
@@ -185,7 +189,6 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
           APPLY
         </button>
       </div>
-
       <div className='bg-gray-100 w-full h-full p-3 rounded-2xl'>
         <Line options={options} data={testdata} />
       </div>
