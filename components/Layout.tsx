@@ -7,7 +7,7 @@ type Props = {
 
 const Layout: React.FunctionComponent<Props> = ({
   children,
-  title = 'This is the default title',
+  title = 'BeeCTRL',
 }) => (
   <div>
     <Head>
@@ -15,7 +15,11 @@ const Layout: React.FunctionComponent<Props> = ({
       <meta charSet="utf-8" />
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
-    {children}
+    <main className="w-full relative">
+      <div className='max-w-6xl mx-auto px-2 sm:px-6 lg:px-8'>
+        {children}
+      </div>
+    </main>
   </div>
 )
 
