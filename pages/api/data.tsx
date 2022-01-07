@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export const config = {
     api: {
-        externalResolver: true 
+        externalResolver: true
     }
 }
 
@@ -16,22 +16,22 @@ export async function getIds() {
         return response.data;
     } catch (error) {
         console.error(error);
-        return  undefined
+        return undefined
     }
 
 }
 
 interface dataQuery {
     pi_id: string
-    start_date: string | Date | null
-    stop_date: string | Date | null 
-} 
+    start_time: string | Date | null
+    stop_time: string | Date | null
+}
 
-export async function getData(params: dataQuery){
+export async function getData(params: dataQuery) {
     let url = `${API_URL}/data`
 
     try {
-        const response = await axios.get(url, {params , headers: {'Access-Control-Allow-Origin' : '*/*'}});
+        const response = await axios.get(url, { params, headers: { 'Access-Control-Allow-Origin': '*' } });
         return response.data;
     } catch (error) {
         console.error(error)
