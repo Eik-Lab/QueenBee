@@ -21,9 +21,21 @@ export async function getIds() {
 
 }
 
-/*
-export async function getData() {
+interface dataQuery {
+    pi_id: string
+    start_date: string | Date | null
+    stop_date: string | Date | null 
+} 
+
+export async function getData(params: dataQuery){
     let url = `${API_URL}/data`
 
+    try {
+        const response = await axios.get(url, {params , headers: {'Access-Control-Allow-Origin' : '*/*'}});
+        return response.data;
+    } catch (error) {
+        console.error(error)
+        return undefined
+    }
+
 }
-*/
