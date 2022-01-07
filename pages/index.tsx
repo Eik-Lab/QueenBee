@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Layout from '../components/Layout'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { getIds } from './api/data'
+import { getData, getIds } from './api/data'
 import Intro from '../components/Intro'
 
 import Select from 'react-select';
@@ -43,14 +43,14 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Chart.js Line Chart',
+      text: 'Temperature data of the chosen beehives',
     },
   },
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const data = {
+export const testdata = {
   labels,
   datasets: [
     {
@@ -79,6 +79,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsType<typeof getServerSideProps> {
 
+  const [selectedId, setSelectedId] = useState([] as any)
+
   const [dateSelection, setDateSelection] = useState([{
     startDate: new Date(),
     endDate: addDays(new Date(), 7),
@@ -89,12 +91,21 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
   const calendar = useRef(null as any)
   const [calendarClicked, setCalendarClicked] = useState(false)
 
+  const [data, setData] = useState([] as any)
+
 
   const locale = "nb-NO"
   const dateOptions: any = { year: 'numeric', month: 'long', day: 'numeric' };
 
-  async function getData() {
-    console.log("yo")
+  async function getSensorData() {
+    // Api only allows one sensor fetched at a time (for Backend; accept multiple sensors in the future)
+    const pi_id = selectedId.value
+    // --
+    console.log(dateSelection[0].startDate)
+    console.log(dateSelection[0].endDate)
+    const res = await getData({pi_id: pi_id, start_date: dateSelection[0].startDate, stop_date: dateSelection[0].endDate})
+    console.log(res)
+
   }
 
   useEffect(() => {
@@ -133,7 +144,8 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
             <div className='w-full'>
               <Select
                 options={ids.ids}
-                isMulti
+                onChange={selected => setSelectedId(selected)}
+                isMulti={false}
                 placeholder="Select your bee hive"
                 name="sensors"
                 classNamePrefix="select"
@@ -168,14 +180,14 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
           </div>
         </div>
         <button
-          onClick={() => getData()}
+          onClick={() => getSensorData()}
           className='bg-yellow-300 px-8 lg:rounded-r-2xl lg:rounded-l-none mb-3 font-bold  py-2 rounded-lg w-full lg:w-auto'>
           APPLY
         </button>
       </div>
 
       <div className='bg-gray-100 w-full h-full p-3 rounded-2xl'>
-      <Line options={options} data={data} />
+        <Line options={options} data={testdata} />
       </div>
 
 
