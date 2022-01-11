@@ -22,6 +22,9 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
+import { CSVLink } from "react-csv";
+
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -31,6 +34,8 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+
 // ----
 
 import faker from 'faker';
@@ -46,6 +51,10 @@ export const options = {
       text: 'Temperature data of the chosen beehives',
     },
   },
+
+  parsing: {
+    xAxisKey: "measurement_time"
+  }
 };
 
 const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
@@ -93,6 +102,9 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
 
   const [data, setData] = useState([] as any)
 
+  const [isCSVDisabled, setCSVDisabled] = useState(true)
+
+
 
   const locale = "nb-NO"
   const dateOptions: any = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -105,16 +117,54 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
 
     const res = await getData(query)
 
+    setCSVDisabled(false)
     setData(res)
 
   }
 
-  console.log("data: ", data)
-  console.log(data.map((item: any) => item.temp1))
-
   function aggregateDataForPlot(data) {
-    let labels = []
-    let datasets = []
+
+    console.log("HELP, this data needs to be aggregated")
+    //https://www.chartjs.org/docs/master/general/data-structures.html
+
+    const datasets = {
+      data: {
+        datasets: [
+          {
+            label: 'Temperature 1',
+            data: data,
+            parsing: {
+              yAxisKey: "temp1"
+            }
+          },
+          {
+            label: 'Temperature 2',
+            data: data,
+            parsing: {
+              yAxisKey: "temp2"
+            }
+          },
+          {
+            label: 'Temperature 3',
+            data: data,
+            parsing: {
+              yAxisKey: "temp3"
+            }
+          },
+          {
+            label: 'Temperature 4',
+            data: data,
+            parsing: {
+              yAxisKey: "temp4"
+            }
+          },
+        ]
+      }
+    }
+
+
+
+    return datasets
   }
 
   useEffect(() => {
@@ -189,9 +239,16 @@ export default function IndexPage(ids: { ids: any[] }): InferGetServerSidePropsT
           APPLY
         </button>
       </div>
+      <button disabled={isCSVDisabled} className='w-full  rounded-lg p-3 bg-blue-400 font-bold mb-3 text-white disabled:bg-gray-500'>
+        <CSVLink data={data} separator={";"} filename={`${selectedId.value}_from_${dateSelection[0].startDate}_to_${dateSelection[0].endDate}`}>
+          EXPORT AS CSV
+        </CSVLink>
+      </button>
       <div className='bg-gray-100 w-full h-full p-3 rounded-2xl'>
-        <Line options={options} data={testdata} />
+        <Line options={options} data={data.length ? aggregateDataForPlot(data): testdata} redraw={true} />
+        
       </div>
+
 
 
     </Layout>
