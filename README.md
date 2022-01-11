@@ -51,5 +51,5 @@ yarn start # npm start
 
 ## Important Notes
 
-* Be sure to update the `package.json` to include your own information for the project you're working on.
-* Purge CSS will only run in production, so use either `build` or `stage` to run it and minimize your CSS file size. You can also modify the `postcss.config.js` file to enable Purge CSS in development.
+- Be sure to update the `package.json` to include your own information for the project you're working on.
+- Purge CSS will only run in production, so use either `build` or `stage` to run it and minimize your CSS file size. You can also modify the `postcss.config.js` file to enable Purge CSS in development.

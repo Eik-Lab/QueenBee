@@ -1,13 +1,13 @@
-import * as React from 'react'
-import Head from 'next/head'
+import * as React from "react";
+import Head from "next/head";
 
 type Props = {
-  title?: string
-}
+  title?: string;
+};
 
 const Layout: React.FunctionComponent<Props> = ({
   children,
-  title = 'BeeCTRL',
+  title = "BeeCTRL",
 }) => (
   <div>
     <Head>
@@ -16,11 +16,9 @@ const Layout: React.FunctionComponent<Props> = ({
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
     <main className="w-full relative">
-      <div className='max-w-6xl mx-auto px-2 sm:px-6 lg:px-8'>
-        {children}
-      </div>
+      <div className="max-w-6xl mx-auto px-2 sm:px-6 lg:px-8">{children}</div>
     </main>
   </div>
-)
+);
 
-export default Layout
+export default Layout;
