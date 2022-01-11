@@ -1,11 +1,8 @@
-# Tailwind CSS + TypeScript + Next.js Starter
+# Queen Bee
 
-This is a lightweight starterkit / boilerplate to get up and running with Tailwind CSS, TypeScript and Next.js. It is also production-ready with a Purge CSS setup.
+Monitor your Bee Hive from the browser
 
-## Why make this boilerplate?
 
-Tailwind, Next.js, and TypeScript is an excellent stack for building web apps. The most annoying part of using the stack
-is setting it up every time, so I made an easy to use template that I and many others can use.
 
 ## Usage
 
@@ -53,3 +50,4 @@ yarn start # npm start
 
 - Be sure to update the `package.json` to include your own information for the project you're working on.
 - Purge CSS will only run in production, so use either `build` or `stage` to run it and minimize your CSS file size. You can also modify the `postcss.config.js` file to enable Purge CSS in development.
+
