@@ -124,7 +124,7 @@ export default function IndexPage(ids: {
     setData(res);
   }
 
-  function aggregateDataForPlot(data) {
+  function aggregateDataForPlot(data: any) {
     console.log("HELP, this data needs to be aggregated");
     //https://www.chartjs.org/docs/master/general/data-structures.html
 

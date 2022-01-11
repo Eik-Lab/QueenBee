@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 function Intro() {
   return (
     <div className="w-full h-auto">
