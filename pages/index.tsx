@@ -34,9 +34,8 @@ ChartJS.register(
   Legend
 );
 
-// ----
 
-import faker from "faker";
+// ----
 
 export const options = {
   responsive: true,
@@ -50,30 +49,9 @@ export const options = {
     },
   },
 
-  parsing: {
-    xAxisKey: "measurement_time",
-  },
+  
 };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const testdata = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(255, 99, 132)",
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
 // -----
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -124,46 +102,27 @@ export default function IndexPage(ids: {
     setData(res);
   }
 
-  function aggregateDataForPlot(data: any) {
-    console.log("HELP, this data needs to be aggregated");
-    //https://www.chartjs.org/docs/master/general/data-structures.html
+  function aggregateDataForTemperaturePlot(data: any) {
+    const tempIdxs = ["temp1", "temp2", "temp3", "temp4", "bme_temp1", "bme_temp2"];
 
-    const datasets = {
-      data: {
-        datasets: [
-          {
-            label: "Temperature 1",
-            data: data,
-            parsing: {
-              yAxisKey: "temp1",
-            },
-          },
-          {
-            label: "Temperature 2",
-            data: data,
-            parsing: {
-              yAxisKey: "temp2",
-            },
-          },
-          {
-            label: "Temperature 3",
-            data: data,
-            parsing: {
-              yAxisKey: "temp3",
-            },
-          },
-          {
-            label: "Temperature 4",
-            data: data,
-            parsing: {
-              yAxisKey: "temp4",
-            },
-          },
-        ],
-      },
-    };
+    const labels = data.map((item: any) => item.measurement_time);
 
-    return datasets;
+    const datasets = tempIdxs.map((tempIdx: string) => ({
+        label: tempIdx,
+        data: data.map((item: any) => item[tempIdx]),
+    }))
+    
+
+
+    const finalData = {
+      labels: labels,
+      datasets: datasets,
+    }
+
+    console.log(finalData)
+
+
+    return finalData;
   }
 
   useEffect(() => {
@@ -275,7 +234,7 @@ export default function IndexPage(ids: {
       <div className="bg-gray-100 w-full h-full p-3 rounded-2xl">
         <Line
           options={options}
-          data={data.length ? aggregateDataForPlot(data) : testdata}
+          data={aggregateDataForTemperaturePlot(data)}
           redraw={true}
         />
       </div>
