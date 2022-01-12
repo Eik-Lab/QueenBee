@@ -7,8 +7,9 @@ import Intro from "../components/Intro";
 import Select from "react-select";
 import { addDays } from "date-fns";
 import { DateRangePicker, DefinedRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main css file
-import "react-date-range/dist/theme/default.css"; // theme css file
+
+// import "react-date-range/dist/styles.css"; // main css file
+// import "react-date-range/dist/theme/default.css"; // theme css file
 
 import {
   Chart as ChartJS,
@@ -111,16 +112,11 @@ export default function IndexPage(ids: {
         label: tempIdx,
         data: data.map((item: any) => item[tempIdx]),
     }))
-    
-
 
     const finalData = {
       labels: labels,
       datasets: datasets,
     }
-
-    console.log(finalData)
-
 
     return finalData;
   }
@@ -138,6 +134,7 @@ export default function IndexPage(ids: {
     // clean up
     return () => window.removeEventListener("click", handleClick);
   }, [showCalendar]);
+
 
   return (
     <Layout title="BeeCTRL">
@@ -226,7 +223,7 @@ export default function IndexPage(ids: {
         <CSVLink
           data={data}
           separator={";"}
-          filename={`${selectedId.value}_from_${dateSelection[0].startDate}_to_${dateSelection[0].endDate}`}
+          filename={selectedId? `${selectedId.value}_from_${dateSelection[0].startDate}_to_${dateSelection[0].endDate}`: "empty"}
         >
           EXPORT AS CSV
         </CSVLink>
@@ -235,7 +232,7 @@ export default function IndexPage(ids: {
         <Line
           options={options}
           data={aggregateDataForTemperaturePlot(data)}
-          redraw={true}
+          redraw={!isCSVDisabled}
         />
       </div>
     </Layout>
